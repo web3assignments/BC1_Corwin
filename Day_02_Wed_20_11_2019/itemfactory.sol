@@ -1,7 +1,4 @@
 pragma solidity >=0.5.0 <0.7.0;
-
-import "./characterfactory.sol";
-
 /**
  * @author Corwin van Dalen
  * @title add items to the game.
