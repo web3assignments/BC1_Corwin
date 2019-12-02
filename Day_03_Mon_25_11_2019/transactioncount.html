@@ -1,26 +1,36 @@
+
 <body>
-Get number of transactions in the latest block<br>
+Get current Ethereum blocknumber<br>
 Compare to <a href="https://etherscan.io/blocks" target="_blank">Etherscan</a>
-<pre id="log" style="width:100%;height:200px"></pre>
+<pre id="log" style="width:100%;height:200px"></pre> 
 <script>
-function log(logstr) {
+function log(logstr) {   
     document.getElementById("log").innerHTML +=logstr+"\n";
+}  
+
+/**
+ * Return the hashes of the transactions in the latest block
+ */ 
+async function transactionHashes() {
+    for (var i = 0x0; i < 0x100; i++) {
+        const request=JSON.stringify({"jsonrpc":"2.0",
+        "method":"eth_getTransactionByBlockNumberAndIndex", 
+        "params": ["latest", `0x${i}`], 
+        "id":67});
+        const rawResponse = await fetch('https://mainnet.infura.io', {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: request
+        });
+    
+        const content = await rawResponse.json();
+        log(`Transaction hash ${i} = ${(content.result.hash)}`);
+    }
 }
-const server="wss://mainnet.infura.io/ws";
-log(`Opening connection to ${server}`);
-var socket = new WebSocket(server);
-socket.onopen = function (event) {
-    const request=JSON.stringify({"id": 1, "method": "eth_getBlockTransactionCountByNumber", "params": ["latest"]});
-    log(`Connection opened, sending: ${request}`);
-    socket.send(request);
-};
-socket.onmessage = async function (event) {
-    log(`Received ${event.data}`);
-    var data=JSON.parse(event.data);
-    log(`Transaction count of latest block = ${parseInt(data.result)}`);
-}
-socket.onerror = function(error) {
-    log(`[error] ${error.message}`);
-};
+transactionHashes();
 </script>
 </body>
+
