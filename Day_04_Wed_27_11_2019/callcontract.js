@@ -1,6 +1,6 @@
 const Web3 = require('web3');
 const web3 = new Web3('https://ropsten.infura.io');
-const TestSetABI = [{
+const getBankBalanceABI = [{
     "constant": true,
     "inputs": [],
     "name": "getBankBalance",
@@ -16,10 +16,10 @@ const TestSetABI = [{
     "type": "function"
 }];
 
-const TestAddress = "0x8b173E32DbE8DA7746ef1a61FDb214b5Fa6F7DE4";
-const ContractTest = new web3.eth.Contract(TestSetABI, TestAddress);
+const CasinoV2Address = "0x8b173E32DbE8DA7746ef1a61FDb214b5Fa6F7DE4";
+const ContractCasinoV2 = new web3.eth.Contract(getBankBalanceABI, CasinoV2Address);
 async function f() { 
-    var result = await ContractTest.methods.getBankBalance().call();
+    var result = await ContractCasinoV2.methods.getBankBalance().call();
     console.log(result);
 }
 f();
