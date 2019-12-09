@@ -3,6 +3,7 @@ import "github.com/provable-things/ethereum-api/provableAPI.sol";
 
 /** @author Gerard Persoon, Corwin van Dalen
     @title A simple casino to gamble on a 6 sided dice
+    @dev This currently works in the play editor, but not in Remix
 */
 
 contract CasinoV3 is usingProvable{
