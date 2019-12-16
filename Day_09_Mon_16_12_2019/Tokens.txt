@@ -1,0 +1,3 @@
+Fungible tokens
+Contract address: 0x3402f3299deDB49EcAaC6c8ab97Be1212954229a
+Transaction ID: 0xdedb927dffbcfb0739f0509822e0c161b10bdac18253cb839b64fbab1c5b1247
