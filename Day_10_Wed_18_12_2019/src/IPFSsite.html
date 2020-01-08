@@ -9,12 +9,16 @@
     <body>
         <h1>IPFS add and retrieve</h1>
         <div class="buttonHolder">
-            String to add: <input type="text" id="stringtoadd" value="void">
-            <input type= "button" class="button" value="Add file" onclick="addFile();"><br>
+            Upload file: 
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" name="files[]" multiple />
+                <input type="button" class="button" value="Upload File" onclick="addFile()" />
+            </form><br>
             Hash to retrieve: <input type="text" id="hashtoretrieve">
             <input type= "button" class="button" value="Retrieve file" onclick="retrieveFile();"><br>
         </div>
         <pre id="log"></pre>
-        <script src="script.js"></script>           
+                   
     </body>
+<script src="script.js"></script>
 </html>
