@@ -1,46 +1,61 @@
-// Load in remix: remix.loadurl("https://github.com/web3examples/ethereum/solidity_examples/Casino.sol")
 pragma solidity >=0.5.0 <0.7.0;
+import "github.com/provable-things/ethereum-api/provableAPI.sol";
+import "./Ownable.sol";
 
-/** @author Gerard Persoon, Corwin van Dalen
-    @title A simple casino to gamble on a 6 sided dice
+/** @author Corwin van Dalen
+    @title Roll 5 dice
+    @dev requires a function for gambling
 */
 
-contract CasinoV2 {
+contract CasinoV3 is usingProvable, Ownable{
 
-    event Won(bool win);   // declaring event
-    uint public dice;	     // saves the number picked to roll for
-    uint public roll;      // number rolled
+    uint[5] public rolls;
+    bytes public result;
+    bytes32 public queryId;
+    uint[5] diceModulus = [10 ** 2, 10 ** 6, 10 ** 10, 10 ** 14, 10 ** 20];
+    uint temp = 0;
 
     // Setup an intial amount for the bank, supplied during the creation of the contract.
     constructor() public payable {
+        provable_setProof(proofType_Ledger);
     }
 
-    /** Perform the bet and pay out if you win
-        @dev several temporary variables are created to make debugging easier
-        Need to pick a number before playing
+    /** Get 5 dice rolls
+        @dev was initially done with a for loop, but gas cost too high
+        @dev uses a random seed which is cut into 5 parts
     */
-    function betAndWin() public payable returns (bool) { // returning value isn't easy to retreive
-        address payable betPlacer = address(msg.sender);
-        uint bet = msg.value;
-        uint payout = bet * 5;
-        uint balance = getBankBalance();
-        require(bet > 0, "No money added to bet.");
-        require(payout <= balance, "Not enough money in bank for this bet."); // bet has already been added to bank balance
-        roll = getRandom()%6 + 1;
-        bool win = bool (roll == dice);
-        if (win)
-            betPlacer.transfer(payout);
-        emit Won(win);// logging event
-        return win;
+    function roll() public {
+        temp = uint(queryId) % diceModulus[4];
+        getRandom();
+        rolls[0] = temp % 6 + 1;
+        rolls[1] = (((uint(queryId) - temp) % diceModulus[3]) % 6 + 1);
+        temp += uint(queryId) % diceModulus[3];
+        rolls[2] = (((uint(queryId) - temp) % diceModulus[2]) % 6 + 1);
+        temp += uint(queryId) % diceModulus[2];
+        rolls[3] = (((uint(queryId) - temp) % diceModulus[1]) % 6 + 1);
+        temp += uint(queryId) % diceModulus[1];
+        rolls[4] = (((uint(queryId) - temp) % diceModulus[0]) % 6 + 1);
     }
 
-    /** Pick your number from 1 to 6
+    /** callback for provable function
     */
-    function pickNumber(uint dicenumber) public {
-        require(dicenumber > 0 && dicenumber < 7, "number must be between 1 and 6.");
-        dice = dicenumber;
+    function __callback(bytes32 _queryId, string memory _result, bytes memory _proof) public {
+        require(msg.sender == provable_cbAddress(), "Nope");
+        if (provable_randomDS_proofVerify__returnCode(
+            _queryId,_result,_proof) == 0)
+        result = bytes(_result);
     }
 
+    /** Draw a random number
+    */
+    function getRandom() public {
+        queryId=provable_newRandomDSQuery(
+            0,      // Query_Execution delay
+            2,      // Num of Random bytes requested
+            200000  // Gas for callback
+        );
+    }
+    
     /** Check the balance of the bank
         @return the balance
     */
@@ -48,17 +63,11 @@ contract CasinoV2 {
         return address(this).balance;
     }
 
-    /** Draw a random number
-        @dev this is not secure but only to demonstrate
-        @return a pseudo random number
+    /** Withdraw funds from the bank, only the owner can do this
     */
-    function getRandom() public view returns(uint256) {
-        return uint256(keccak256(abi.encodePacked(block.difficulty, block.coinbase)));
-    }
-
-    /** Deposit more funds for bank
-        @dev used when the bank runs out of money
-    */
-    function () external payable {
+    function withdraw(uint amount) external onlyOwner returns(bool) {
+        require(amount < getBankBalance());
+        msg.sender.transfer(amount);
+        return true;
     }
 }
