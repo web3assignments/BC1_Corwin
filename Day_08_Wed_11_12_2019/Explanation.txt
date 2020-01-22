@@ -1,0 +1,3 @@
+Selected two mechanisms for upgrade:
+1. Using initialize rather than a constructor so the contract is upgradable
+2. Making use of creating and destroying a contract by making it 'mortal', this way the current version of the casino is always the only one available.
