@@ -1,6 +1,5 @@
 pragma solidity >=0.5.0 <0.7.0;
 import "github.com/provable-things/ethereum-api/provableAPI.sol";
-import "./Ownable.sol";
 
 /** @author Corwin van Dalen
     @title Roll 5 dice
@@ -55,18 +54,11 @@ contract CasinoV3 is usingProvable, Ownable{
             200000  // Gas for callback
         );
     }
-    
-    /** Check the balance of the bank
-        @return the balance
-    */
-    function getBankBalance() public view returns(uint256 ret) {
-        return address(this).balance;
-    }
 
     /** Withdraw funds from the bank, only the owner can do this
     */
     function withdraw(uint amount) external onlyOwner returns(bool) {
-        require(amount < getBankBalance());
+        require(amount < this.balance);
         msg.sender.transfer(amount);
         return true;
     }
