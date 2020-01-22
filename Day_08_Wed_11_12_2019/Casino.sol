@@ -71,7 +71,7 @@ contract Casino is usingProvable, Initializable {
 
 contract Factory {
     bytes mmcode= type(Casino).creationCode;
-    CasinoV3 public deployedMortal;
+    Casino public deployedMortal;
 
     function NameDeployedMortal() public view returns (string memory) {
         return deployedMortal.name();
