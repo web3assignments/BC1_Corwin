@@ -1,0 +1,9 @@
+I reckon there will be 2 types of users for a casino contract, customers who want to gamble and an owner facilitating the gambling.
+
+For all users it is always highly recommended to keep private keys in a secure and offline place.
+
+Depending on the popularity of the casino dapp, different recommendations can be made:
+
+For the customer, in order to gamble using the app, a wallet like metamask is recommended to interract with the dapp. If the customer gambles using a large amount  of ETH, it is recommended to store excess ETH in a hardware wallet.
+
+For the owner it is recommended to just store proceeds in an offline wallet once the dapp grows bigger and more users start using the casino dapp, dus to it being way more secure than an online wallet.
