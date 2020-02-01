@@ -1,6 +1,6 @@
 pragma solidity >=0.5.0 <0.7.0;
 import "github.com/provable-things/ethereum-api/provableAPI.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-sdk/blob/master/packages/lib/contracts/Initializable.sol"
+import "https://github.com/OpenZeppelin/openzeppelin-sdk/blob/master/packages/lib/contracts/Initializable.sol";
 
 /** @author Corwin van Dalen
     @title Roll 5 dice
