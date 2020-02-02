@@ -1,6 +1,7 @@
 function log(logstr) {   
     document.getElementById("log").innerHTML +=logstr+"\n";
 }
+
 web3 = new Web3(Web3.givenProvider);     
 web3.extend({ // web3.eth.requestAccounts() isn't available (yet)
     methods: [{
@@ -9,19 +10,6 @@ web3.extend({ // web3.eth.requestAccounts() isn't available (yet)
         params: 0
     }]
 }); 
-
-async function foo() {
-    log(`Version of web3.js: ${web3.version}`);            
-    var result=await web3.eth_requestAccounts().catch(x=>log(x.message));
-    log(`Value from eth_requestAccounts: ${JSON.stringify(result)}`);
-    var acts=await web3.eth.getAccounts().catch(log);
-    log(`Here are the accounts: ${JSON.stringify(acts)}`);
-
-    ethereum.on('accountsChanged', newacts => { 
-        acts=newacts;
-        log(`We have new accounts: ${JSON.stringify(acts)}`);
-    })
-}
 
 const contractABI = [
 	{
@@ -221,4 +209,25 @@ async function access() {
         log(`You are not subscribed`);
     }
 }
-foo();
+
+async function web3connection() {
+    const web3Connect = new Web3Connect.Core({
+        network: "mainnet", // optional
+        providerOptions: {
+            walletconnect: {
+                package: WalletConnectProvider,
+                    options: { infuraId: "0" } // dummy infura code!!
+            }
+        }
+    });
+    web3Connect.toggleModal();
+    web3Connect.on("connect", OnConnect);
+}
+
+async function OnConnect(provider) {
+    const web3 = new Web3(provider); // add provider to web3
+    var acts=await web3.eth.getAccounts().catch(log);
+    log(`Here are the accounts: ${JSON.stringify(acts)}`);
+}
+
+web3connection();
