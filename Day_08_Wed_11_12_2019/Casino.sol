@@ -79,7 +79,7 @@ contract Factory {
     function DestroyDeployedMortal() public {
         deployedMortal.destroy();
     }
-    function DeployViaCreate() public returns (Mortal){
+    function DeployViaCreate() public returns (Casino){
         deployedMortal=Casino(Create(mmcode));
         deployedMortal.SetName("Created via create");
         return deployedMortal;
@@ -90,7 +90,7 @@ contract Factory {
             if iszero(extcodesize(addr)) { revert(0, 0) }
         }
     }
-    function DeployViaCreate2() public returns (Mortal){
+    function DeployViaCreate2() public returns (Casino){
         deployedMortal=Casino(Create2(mmcode,0x00));
         deployedMortal.SetName("Created via create2");
         return deployedMortal;
