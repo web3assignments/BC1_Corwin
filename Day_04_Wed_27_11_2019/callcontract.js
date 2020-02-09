@@ -22,4 +22,15 @@ async function f() {
     var result = await ContractCasinoV2.methods.getBankBalance().call();
     console.log(result);
 }
+
+function getLogs() {           
+  ContractCasinoV2.getPastEvents("allEvents", {
+      fromBlock: 0,
+      toBlock: 'latest'
+    }) 
+    .then(function(events) {
+      console.log('These are all the CasinoV2 events:');
+      console.log('\n' JSON.stringify(events));
+    });
+}
 f();
