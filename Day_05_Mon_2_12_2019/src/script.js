@@ -2,6 +2,15 @@ function log(logstr) {
     document.getElementById("log").innerHTML +=logstr+"\n";
 }
 
+web3 = new Web3(Web3.givenProvider);     
+web3.extend({ // web3.eth.requestAccounts() isn't available (yet)
+    methods: [{
+        name: 'eth_requestAccounts',
+        call: 'eth_requestAccounts',
+        params: 0
+    }]
+}); 
+
 async function getAccounts() { 
     web3 = new Web3(Web3.givenProvider); // provider from metamask         
     web3.extend({ // web3.eth.requestAccounts() isn't available (yet)
@@ -49,7 +58,6 @@ async function getChain() {
         log(`We have a new chain: ${chainId}`);
     }
 }
-
 const getBankBalanceABI = [{
     "constant": true,
     "inputs": [],
